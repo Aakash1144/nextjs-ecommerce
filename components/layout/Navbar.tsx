@@ -9,18 +9,18 @@ import {
 export default function Navbar() {
   return (
     <header className="border-b">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8 md:py-5">
 
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold tracking-tight"
+          className="text-xl font-bold tracking-tight md:text-2xl"
         >
-          🛍️ Aakash Store
+          🛍️ Arora Store
         </Link>
 
         {/* Search */}
-        <div className="relative w-96">
+        <div className="relative w-full max-w-md">
 
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
@@ -36,7 +36,7 @@ export default function Navbar() {
         </div>
 
         {/* Right Icons */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 md:gap-6">
 
           <Heart
             className="cursor-pointer"
