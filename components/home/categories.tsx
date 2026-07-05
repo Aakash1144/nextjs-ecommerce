@@ -1,27 +1,31 @@
+import Image from "next/image";
+import Link from "next/link";
+
 const categories = [
   {
-    id: 1,
+    name: "Beauty",
+    image: "/images/categories/beauty.jpg",
+    count: "100+ Products",
+  },
+  {
     name: "Fashion",
-    emoji: "👕",
-    items: "120+ Products",
+    image: "/images/categories/fashion.jpg",
+    count: "120+ Products",
   },
   {
-    id: 2,
-    name: "Electronics",
-    emoji: "💻",
-    items: "85+ Products",
-  },
-  {
-    id: 3,
     name: "Footwear",
-    emoji: "👟",
-    items: "60+ Products",
+    image: "/images/categories/footwear.jpg",
+    count: "60+ Products",
   },
   {
-    id: 4,
     name: "Furniture",
-    emoji: "🛋️",
-    items: "40+ Products",
+    image: "/images/categories/furniture.jpg",
+    count: "40+ Products",
+  },
+  {
+    name: "Electronics",
+    image: "/images/categories/electronics.jpg",
+    count: "85+ Products",
   },
 ];
 
@@ -31,38 +35,43 @@ export default function Categories() {
       <div className="mx-auto max-w-7xl px-8">
 
         <div className="mb-10">
-          <h2 className="text-3xl font-bold">
-            Shop by Category
-          </h2>
-
+          <h2 className="text-3xl font-bold">Shop by Category</h2>
           <p className="mt-2 text-gray-500">
             Browse our most popular categories
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
 
           {categories.map((category) => (
-            <div
-              key={category.id}
-              className="cursor-pointer rounded-2xl border p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+            <Link
+              key={category.name}
+              href={`/category/${category.name.toLowerCase()}`}
+              className="group overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
             >
-              <div className="text-5xl">
-                {category.emoji}
+              {/* IMAGE */}
+              <div className="relative h-40 w-full overflow-hidden">
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition duration-500 group-hover:scale-110"
+                />
               </div>
 
-              <h3 className="mt-5 text-xl font-semibold">
-                {category.name}
-              </h3>
-
-              <p className="mt-2 text-sm text-gray-500">
-                {category.items}
-              </p>
-            </div>
+              {/* TEXT */}
+              <div className="p-4 text-center">
+                <h3 className="text-lg font-semibold">
+                  {category.name}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {category.count}
+                </p>
+              </div>
+            </Link>
           ))}
 
         </div>
-
       </div>
     </section>
   );

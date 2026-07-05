@@ -1,5 +1,5 @@
 "use client";
-
+import { useCartStore } from "@/store/cartStore";
 import { useState } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Star } from "lucide-react";
@@ -21,6 +21,8 @@ export default function ProductDetails({
   const [selectedSize, setSelectedSize] = useState(
     product.sizes?.[0] || ""
   );
+
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const [selectedColor, setSelectedColor] = useState(
     product.colors?.[0] || ""
@@ -189,10 +191,16 @@ export default function ProductDetails({
         {/* Buttons */}
 
         <div className="mt-10 flex gap-4">
-          <button className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 py-4 font-semibold text-white transition hover:bg-slate-800">
+          <button
+            onClick={() => {
+                addToCart(product);
+                alert(`${product.name} added to cart!`);
+            }}
+            className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 py-4 font-semibold text-white transition hover:bg-slate-800"
+            >
             <ShoppingCart size={20} />
-            Add to Cart
-          </button>
+                Add to Cart
+            </button>
 
           <button className="rounded-xl border p-4 transition hover:bg-slate-100">
             <Heart size={22} />

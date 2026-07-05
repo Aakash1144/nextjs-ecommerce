@@ -1,16 +1,20 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
 import { Product } from "@/types/products";
 import { formatPrice } from "@/lib/utils";
+import { useCartStore } from "@/store/cartStore";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const addToCart = useCartStore((state) => state.addToCart);
+
   return (
     <Link
       href={`/products/${product.slug}`}
@@ -27,8 +31,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         />
 
         <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Wishlist functionality will be added later
+          }}
           className="absolute right-3 top-3 rounded-full bg-white p-2 shadow transition hover:scale-110"
-          onClick={(e) => e.preventDefault()}
         >
           <Heart size={18} />
         </button>
@@ -75,11 +83,25 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <button
-          onClick={(e) => e.preventDefault()}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-900 py-3 text-white transition hover:bg-slate-800"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            addToCart(product);
+
+            // TODO: Replace with toast notification
+            alert(`${product.name} added to cart!`);
+          }}
+          disabled={product.stock === 0}
+          className={`flex w-full items-center justify-center gap-2 rounded-lg py-3 text-white transition ${
+            product.stock > 0
+              ? "bg-slate-900 hover:bg-slate-800"
+              : "cursor-not-allowed bg-gray-400"
+          }`}
         >
           <ShoppingCart size={18} />
-          Add to Cart
+
+          {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
         </button>
       </div>
     </Link>
