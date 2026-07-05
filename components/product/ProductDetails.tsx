@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 
-import { Product } from "@/types/product";
+import { Product } from "@/types/products";
 import { formatPrice } from "@/lib/utils";
 
 interface ProductDetailsProps {
