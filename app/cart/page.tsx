@@ -138,9 +138,12 @@ export default function CartPage() {
             <span>{formatPrice(subtotal())}</span>
           </div>
 
-          <button className="mt-8 w-full rounded-lg bg-black py-3 text-white hover:bg-slate-800">
-            Proceed to Checkout
-          </button>
+          <Link
+            href="/checkout"
+            className="mt-6 block w-full rounded-lg bg-black py-3 text-center text-white"
+          >
+          Proceed to Checkout
+          </Link>
         </div>
       </div>
     </main>

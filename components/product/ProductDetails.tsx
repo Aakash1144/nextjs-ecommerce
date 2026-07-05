@@ -1,8 +1,11 @@
 "use client";
+
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useState } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart, Star } from "lucide-react";
+import { toast } from "sonner";
 
 import { Product } from "@/types/products";
 import { formatPrice } from "@/lib/utils";
@@ -22,16 +25,24 @@ export default function ProductDetails({
     product.sizes?.[0] || ""
   );
 
-  const addToCart = useCartStore((state) => state.addToCart);
-
   const [selectedColor, setSelectedColor] = useState(
     product.colors?.[0] || ""
   );
 
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  const {
+    addToWishlist,
+    removeFromWishlist,
+    isInWishlist,
+  } = useWishlistStore();
+
+  const liked = isInWishlist(product.id);
+
   return (
     <section className="grid gap-12 lg:grid-cols-2">
-      {/* ================= IMAGE GALLERY ================= */}
 
+      {/* ================= IMAGE GALLERY ================= */}
       <div>
         <div className="relative aspect-square overflow-hidden rounded-2xl border bg-slate-100">
           <Image
@@ -69,35 +80,26 @@ export default function ProductDetails({
       </div>
 
       {/* ================= PRODUCT INFO ================= */}
-
       <div>
         <p className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {product.brand}
         </p>
 
-        <h1 className="mt-2 text-4xl font-bold">
-          {product.name}
-        </h1>
+        <h1 className="mt-2 text-4xl font-bold">{product.name}</h1>
 
         {/* Rating */}
-
         <div className="mt-5 flex items-center gap-2">
           <Star
             size={18}
             className="fill-yellow-400 text-yellow-400"
           />
-
-          <span className="font-medium">
-            {product.rating}
-          </span>
-
+          <span className="font-medium">{product.rating}</span>
           <span className="text-slate-500">
             ({product.reviewCount} Reviews)
           </span>
         </div>
 
         {/* Price */}
-
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <span className="text-4xl font-bold">
             {formatPrice(product.price)}
@@ -117,7 +119,6 @@ export default function ProductDetails({
         </div>
 
         {/* Stock */}
-
         <div className="mt-5">
           {product.stock > 0 ? (
             <span className="font-medium text-green-600">
@@ -131,18 +132,14 @@ export default function ProductDetails({
         </div>
 
         {/* Description */}
-
         <p className="mt-8 leading-8 text-slate-600">
           {product.description}
         </p>
 
         {/* Colors */}
-
         {product.colors && product.colors.length > 0 && (
           <div className="mt-10">
-            <h3 className="mb-3 font-semibold">
-              Color
-            </h3>
+            <h3 className="mb-3 font-semibold">Color</h3>
 
             <div className="flex flex-wrap gap-3">
               {product.colors.map((color) => (
@@ -163,12 +160,9 @@ export default function ProductDetails({
         )}
 
         {/* Sizes */}
-
         {product.sizes && product.sizes.length > 0 && (
           <div className="mt-8">
-            <h3 className="mb-3 font-semibold">
-              Size
-            </h3>
+            <h3 className="mb-3 font-semibold">Size</h3>
 
             <div className="flex flex-wrap gap-3">
               {product.sizes.map((size) => (
@@ -189,21 +183,46 @@ export default function ProductDetails({
         )}
 
         {/* Buttons */}
-
         <div className="mt-10 flex gap-4">
+
+          {/* ADD TO CART */}
           <button
             onClick={() => {
-                addToCart(product);
-                alert(`${product.name} added to cart!`);
+              addToCart(product);
+
+              toast.success("Added to cart 🛒", {
+                description: product.name,
+              });
             }}
             className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 py-4 font-semibold text-white transition hover:bg-slate-800"
-            >
+          >
             <ShoppingCart size={20} />
-                Add to Cart
-            </button>
+            Add to Cart
+          </button>
 
-          <button className="rounded-xl border p-4 transition hover:bg-slate-100">
-            <Heart size={22} />
+          {/* WISHLIST */}
+          <button
+            onClick={() => {
+              if (liked) {
+                removeFromWishlist(product.id);
+                toast.success("Removed from wishlist", {
+                  description: product.name,
+                });
+              } else {
+                addToWishlist(product);
+                toast.success("Added to wishlist ❤️", {
+                  description: product.name,
+                });
+              }
+            }}
+            className="rounded-xl border p-4 transition hover:bg-slate-100"
+          >
+            <Heart
+              size={22}
+              className={
+                liked ? "fill-red-500 text-red-500" : ""
+              }
+            />
           </button>
         </div>
       </div>

@@ -1,17 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Heart,
-  ShoppingCart,
-  User,
-  Search,
-} from "lucide-react";
+import { Heart, ShoppingCart, User, Search } from "lucide-react";
 
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useCartStore } from "@/store/cartStore";
 
 export default function Navbar() {
   const items = useCartStore((state) => state.items);
+  const wishlistItems = useWishlistStore((state) => state.items);
 
   const totalItems = items.reduce(
     (total, item) => total + item.quantity,
@@ -21,6 +18,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-8 md:py-5">
+
         {/* Logo */}
         <Link
           href="/"
@@ -45,10 +43,29 @@ export default function Navbar() {
 
         {/* Right Icons */}
         <div className="flex items-center gap-5">
-          <button className="transition hover:scale-110">
-            <Heart size={22} />
-          </button>
 
+          {/* ❤️ Wishlist */}
+          <Link
+            href="/wishlist"
+            className="relative transition hover:scale-110"
+          >
+            <Heart
+              size={22}
+              className={
+                wishlistItems.length > 0
+                  ? "text-red-500 fill-red-500"
+                  : "text-black"
+              }
+            />
+
+            {wishlistItems.length > 0 && (
+              <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">
+                {wishlistItems.length}
+              </span>
+            )}
+          </Link>
+
+          {/* 🛒 Cart */}
           <Link
             href="/cart"
             className="relative transition hover:scale-110"
@@ -62,6 +79,7 @@ export default function Navbar() {
             )}
           </Link>
 
+          {/* 👤 User */}
           <button className="transition hover:scale-110">
             <User size={22} />
           </button>
