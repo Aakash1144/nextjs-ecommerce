@@ -32,7 +32,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    clearCart();
+    // clearCart();
     router.push("/order-success");
   };
 
